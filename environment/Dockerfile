@@ -1,4 +1,4 @@
-# hash:sha256:5d88b9f875062134ead2275b7f243ff3c08351ad91e8a4ee7c834b40e50a875c
+# hash:sha256:e3f52c47f33230c753670f70a65bf957e0fa5321c0b51123543be979bf9625ad
 ARG REGISTRY_HOST
 FROM $REGISTRY_HOST/codeocean/mambaforge3:23.1.0-4-python3.10.12-ubuntu22.04
 
@@ -17,9 +17,11 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install -U --no-cache-dir \
+    arviz \
     matplotlib \
     scipy \
     seaborn \
+    sklearn \
     statsmodels
 
 RUN pip3 install -U --no-cache-dir \

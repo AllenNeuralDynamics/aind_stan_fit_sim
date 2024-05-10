@@ -4,6 +4,9 @@ import numpy as np
 from scipy.stats import logistic
 from collections import namedtuple
 from scipy.stats import pearsonr
+import seaborn as sns
+import re
+import pandas as pd
 
 class QLearningModel:
     def __init__(self, start_values):
@@ -372,7 +375,7 @@ class QLearningModelSim:
 
 
 def myPairPlot(df):
-    g = sns.pairplot(paramsSim, corner=True)
+    g = sns.pairplot(df, corner=True)
     g.map_lower(corrfunc)
     plt.show()
 
@@ -382,3 +385,14 @@ def corrfunc(x, y, ax=None, **kws):
     r, _ = pearsonr(x, y)
     ax = ax or plt.gca()
     ax.annotate(f'ρ = {r:.2f}', xy=(.1, .9), xycoords=ax.transAxes)
+
+def getSessionFitParams(summary, paramNames, focus = 'mean'):
+    paramsFit = []
+    pattern = r'\[(\d+)\]'
+    for paramInd in range(len(paramNames)):
+        temp = summary.loc[summary.index.str.startswith(paramNames[paramInd]) & ~summary.index.str.contains('pr'), focus]
+        sessionInd = [int(re.search(pattern, index).group(1)) for index in temp.index]
+        temp = temp.iloc[sessionInd].values
+        paramsFit.append(temp)
+    paramsFit = pd.DataFrame(paramsFit, index= paramNames).T
+    return paramsFit
