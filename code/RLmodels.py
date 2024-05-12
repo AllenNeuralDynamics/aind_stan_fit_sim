@@ -48,7 +48,8 @@ class QLearningModel:
                     self.Q[t + 1, 0] = self.Q[t, 0] + self.alpha_ppe * self.pe[t]
 
         # Softmax rule
-        prob_choice = 1 / (1 + np.exp(-self.beta * (self.Q[:, 1] - self.Q[:, 0]) + self.bias))
+        # prob_choice = 1 / (1 + np.exp(-self.beta * (self.Q[:, 1] - self.Q[:, 0]) - self.bias))
+        prob_choice = softmax(self.beta * (self.Q[:, 1] - self.Q[:, 0]) + self.bias)
 
         if choice[-1] == 1:
             self.pe[-1] = self.outcome[-1] - self.Q[-1, 1]
