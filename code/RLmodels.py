@@ -64,6 +64,8 @@ class QLearningModel:
 
         return self
 
+        
+
     def _likelihood(self, choice, prob_choice):
         return np.log(np.prod(prob_choice[choice == 1]) * np.prod(1 - prob_choice[choice == 0]))
 
