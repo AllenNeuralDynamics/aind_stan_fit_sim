@@ -21,7 +21,8 @@ RUN pip install -U --no-cache-dir \
     matplotlib \
     scipy \
     seaborn \
-    scikit-learn
+    scikit-learn \
+    codeocean
 
 RUN pip3 install -U --no-cache-dir \
     numpy==1.26.4 \
