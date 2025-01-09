@@ -1,4 +1,7 @@
 /data/
+/aind_ephys_behavior_quanlity-analysis/
+/aind-beh-ephys-analysis
+
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
