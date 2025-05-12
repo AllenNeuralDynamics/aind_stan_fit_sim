@@ -22,7 +22,10 @@ RUN pip install -U --no-cache-dir \
     scipy \
     seaborn \
     scikit-learn \
-    codeocean
+    codeocean \
+    PyPDF2 \
+    aind-dynamic-foraging-data-utils==0.1.4
+    
 
 RUN pip3 install -U --no-cache-dir \
     numpy==1.26.4 \
