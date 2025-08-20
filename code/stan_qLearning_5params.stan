@@ -39,7 +39,7 @@ transformed parameters {
 model {
   // Hyperparameters
   mu_p  ~ normal(0, 1);
-  sigma ~ cauchy(0, 1);
+  sigma ~ cauchy(0, 0.2);
 
   // individual parameters
   aN_pr   ~ normal(0, 1);
