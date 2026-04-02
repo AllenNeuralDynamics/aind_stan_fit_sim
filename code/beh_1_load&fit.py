@@ -1,0 +1,148 @@
+# %%
+import nest_asyncio
+import stan
+import numpy as np
+import pandas as pd
+import os
+import sys
+import ast
+import pickle
+import json
+from os import path
+
+sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
+
+from RLmodels import QLearningModel
+from RLmodels import RestlessBanditDecoupled
+from RLmodels import QLearningModelSim, myPairPlot, getSessionFitParams
+
+import matplotlib.pyplot as plt
+import seaborn as sns
+import arviz as az
+from scipy.stats import spearmanr, pearsonr, norm, halfcauchy, cauchy
+from sklearn.linear_model import LinearRegression
+from aind_dynamic_foraging_basic_analysis.licks.lick_analysis import (
+    plot_lick_analysis, load_data, cal_metrics, plot_met
+)
+from aind_dynamic_foraging_basic_analysis import plot_foraging_session
+from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
+from beh_functions import parseSessionID, session_dirs, makeSessionDF
+import statsmodels.api as sm
+
+nest_asyncio.apply()
+
+
+def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
+    print(f'\n=== Processing animal {animalID} ===')
+
+    # load curated session data
+    animal_dir = f'/root/capsule/scratch/{animalID}'
+    ani_session_file = f'{animal_dir}/{animalID}_session_data.csv'
+
+    if not os.path.exists(ani_session_file):
+        print(f'File {ani_session_file} does not exist, session is not curated yet')
+        return
+
+    ani_session_data = pd.read_csv(ani_session_file)
+    print(f'{len(ani_session_data)} sessions are curated for animal {animalID}')
+
+    if len(ani_session_data) == 0:
+        print(f'No curated sessions found for animal {animalID}')
+        return
+
+    # session data load
+    choices = []
+    outcomes = []
+    sessionLens = []
+    sessNum = len(ani_session_data)
+
+    for sessionInd in range(len(ani_session_data)):
+        session = ani_session_data.loc[sessionInd, 'session_id']
+        print(f'Extracting session data for session {session}')
+
+        session_dir = session_dirs(session)
+        nwb_file = os.path.join(session_dir['beh_fig_dir'], session + '.nwb')
+        nwb = load_nwb_from_filename(nwb_file)
+
+        curr_cut = ast.literal_eval(ani_session_data.loc[sessionInd, 'session_cut'])
+        choice_tbl = makeSessionDF(session, curr_cut)
+
+        choices.append(list(choice_tbl['choice'].values))
+        outcomes.append(list(choice_tbl['outcome'].values))
+        sessionLens.append(len(choice_tbl))
+
+    if len(sessionLens) == 0:
+        print(f'No valid session data found for animal {animalID}')
+        return
+
+    # make data for stan
+    maxLen = max(sessionLens)
+
+    allChoiceArray = np.array([
+        np.pad(choiceSimCurr, (0, maxLen - sessionLenCurr), mode='constant')
+        for choiceSimCurr, sessionLenCurr in zip(choices, sessionLens)
+    ]).astype(int)
+
+    allOutcomeArray = np.array([
+        np.pad(outcomeSimCurr, (0, maxLen - sessionLenCurr), mode='constant')
+        for outcomeSimCurr, sessionLenCurr in zip(outcomes, sessionLens)
+    ]).astype(int)
+
+    sim_data = {
+        "N": sessNum,
+        "T": maxLen,
+        "Tsesh": sessionLens,
+        "choice": allChoiceArray,
+        "outcome": allOutcomeArray,
+    }
+
+    # Read the Stan model from a file
+    with open(model_path, "r") as file:
+        model_code = file.read()
+
+    # fitting
+    print(f'Building Stan model for animal {animalID}')
+    posterior = stan.build(model_code, data=sim_data)
+
+    print(f'Sampling Stan model for animal {animalID}')
+    fit = posterior.sample(num_chains=16, num_samples=5000, num_warmup=2500)
+
+    # summarize
+    summaryMean = az.summary(fit, stat_focus='mean')
+    summaryMedian = az.summary(fit, stat_focus='median')
+    summary = pd.merge(summaryMean, summaryMedian, left_index=True, right_index=True)
+
+    # save
+    paramNames = ['aN', 'aP', 'aF', 'beta', 'bias']
+    saveDir = path.expanduser(f'~/capsule/scratch/{animalID}/stan_qLearning_5params')
+    os.makedirs(saveDir, exist_ok=True)
+
+    paramsFit = getSessionFitParams(summary, paramNames, focus='mean')
+
+    summary.to_csv(f'{saveDir}/summary.csv', index=True)
+    paramsFit.to_csv(f'{saveDir}/paramsFit.csv')
+    ani_session_data.to_csv(f'{saveDir}/ani_session_data.csv', index=False)
+
+    samples = dict(fit)
+    with open(f'{saveDir}/samples', 'wb') as pickle_file:
+        pickle.dump(samples, pickle_file)
+
+    print(f'Finished animal {animalID}. Results saved to {saveDir}')
+
+
+def main():
+    # if len(sys.argv) < 2:
+    #     print('Usage: python script.py <animalID1> [animalID2] [animalID3] ...')
+    #     sys.exit(1)
+
+    animalIDs = ['669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
+
+    for animalID in animalIDs:
+        try:
+            fit_animal(animalID)
+        except Exception as e:
+            print(f'Error processing animal {animalID}: {e}')
+
+
+if __name__ == '__main__':
+    main()

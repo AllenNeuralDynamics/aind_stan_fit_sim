@@ -9,7 +9,7 @@ ARG AWS_SECRET_ACCESS_KEY
 
 ARG GIT_ASKPASS
 ARG GIT_ACCESS_TOKEN
-COPY git-askpass /
+COPY git-ask-pass /
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -24,7 +24,9 @@ RUN pip install -U --no-cache-dir \
     scikit-learn \
     codeocean \
     PyPDF2 \
-    aind-dynamic-foraging-data-utils==0.1.4
+    aind-dynamic-foraging-data-utils==0.1.4 \
+    open-ephys-python-tools \
+    spikeinterface
     
 
 RUN pip3 install -U --no-cache-dir \
