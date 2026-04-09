@@ -6,14 +6,17 @@ import sys
 import os
 
 # --- external utils bootstrap ---
-_utils_path = os.environ.get(
-    'AIND_BEH_EPHYS_UTILS',
-    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils'
-)
-if not os.path.isdir(_utils_path):
+_utils_candidates = [
+    os.environ.get('AIND_BEH_EPHYS_UTILS'),
+    '/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
+    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
+]
+_utils_path = next((p for p in _utils_candidates if p and os.path.isdir(p)), None)
+if _utils_path is None:
     raise RuntimeError(
-        f'aind-beh-ephys-analysis utils not found at: {_utils_path}\n'
-        'Run postInstall or set AIND_BEH_EPHYS_UTILS to the correct path.'
+        'aind-beh-ephys-analysis utils not found. Checked:\n'
+        + '\n'.join([p for p in _utils_candidates if p])
+        + '\nRun postInstall or set AIND_BEH_EPHYS_UTILS to the correct path.'
     )
 sys.path.insert(0, _utils_path)
 print(f'[bootstrap] using beh_ephys utils from: {_utils_path}')

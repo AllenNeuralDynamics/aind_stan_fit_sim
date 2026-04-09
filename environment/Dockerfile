@@ -14,6 +14,8 @@ COPY git-ask-pass /
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         build-essential=12.9ubuntu3 \
+        git \
+        curl \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install -U --no-cache-dir \
