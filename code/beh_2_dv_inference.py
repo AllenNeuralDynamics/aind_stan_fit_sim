@@ -3,14 +3,31 @@ import numpy as np
 import pandas as pd
 from os import path
 import sys
-sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
+import os
+
+# --- external utils bootstrap ---
+_utils_path = os.environ.get(
+    'AIND_BEH_EPHYS_UTILS',
+    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils'
+)
+if not os.path.isdir(_utils_path):
+    raise RuntimeError(
+        f'aind-beh-ephys-analysis utils not found at: {_utils_path}\n'
+        'Run postInstall or set AIND_BEH_EPHYS_UTILS to the correct path.'
+    )
+sys.path.insert(0, _utils_path)
+print(f'[bootstrap] using beh_ephys utils from: {_utils_path}')
+try:
+    import beh_functions  # smoke-test
+except ImportError as e:
+    raise ImportError(f'beh_functions not importable from {_utils_path}: {e}')
+# --- end bootstrap ---
+
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 from beh_functions import session_dirs, makeSessionDF
 from RLmodels import QLearningModel
-# from RLmodels import qLearningModel_5params_simNoPlot
 import matplotlib.pyplot as plt
 import pickle
-import os
 import ast
 
 # %%

@@ -1,10 +1,27 @@
 # %%
 import sys
-sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
+import os
+
+# --- external utils bootstrap ---
+_utils_path = os.environ.get(
+    'AIND_BEH_EPHYS_UTILS',
+    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils'
+)
+if not os.path.isdir(_utils_path):
+    raise RuntimeError(
+        f'aind-beh-ephys-analysis utils not found at: {_utils_path}\n'
+        'Run postInstall or set AIND_BEH_EPHYS_UTILS to the correct path.'
+    )
+sys.path.insert(0, _utils_path)
+print(f'[bootstrap] using beh_ephys utils from: {_utils_path}')
+try:
+    import beh_functions  # smoke-test
+except ImportError as e:
+    raise ImportError(f'beh_functions not importable from {_utils_path}: {e}')
+# --- end bootstrap ---
+
 import nest_asyncio
 import pandas as pd
-import os
-# from RLmodels import qLearningModel_5params_simNoPlot
 import matplotlib.pyplot as plt
 nest_asyncio.apply()
 from beh_functions import parseSessionID, session_dirs, plot_session_glm, plot_session_in_time_all, bonsai_to_nwb, transfer_nwb

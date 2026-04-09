@@ -5,6 +5,21 @@ set -e
 pip install --no-cache-dir git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis@plot_session_in_time_sue
 
 
+# clone external analysis repo used via source-path imports
+EXTERNAL_ROOT="/root/capsule/external"
+BEH_EPHYS_REPO_DIR="$EXTERNAL_ROOT/aind-beh-ephys-analysis"
+BEH_EPHYS_REPO_URL="https://github.com/AllenNeuralDynamics/aind-beh-ephys-analysis.git"
+
+mkdir -p "$EXTERNAL_ROOT"
+if [ ! -d "$BEH_EPHYS_REPO_DIR/.git" ]; then
+  git clone --branch main --single-branch "$BEH_EPHYS_REPO_URL" "$BEH_EPHYS_REPO_DIR"
+else
+  git -C "$BEH_EPHYS_REPO_DIR" fetch origin
+  git -C "$BEH_EPHYS_REPO_DIR" checkout main || git -C "$BEH_EPHYS_REPO_DIR" checkout -b main origin/main
+  git -C "$BEH_EPHYS_REPO_DIR" pull --ff-only origin main
+fi
+
+
 # move VS code data directory into capsule, so it persists
 ln -s /root/capsule/code/.vscode/ /.vscode
 

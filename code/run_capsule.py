@@ -39,3 +39,5 @@ if __name__ == '__main__':
         ids = sys.argv[1:]
     else:
         ids = ['754897']
+    
+    run(ids)
