@@ -26,7 +26,9 @@ RUN pip install -U --no-cache-dir \
     scikit-learn==1.5.2 \
     codeocean==0.14.0 \
     PyPDF2==3.0.1 \
-    aind-dynamic-foraging-data-utils==0.1.4
+    aind-dynamic-foraging-data-utils==0.1.4 \
+    open-ephys-python-tools==0.1.10 \
+    spikeinterface[full]==0.103.0
     
 
 RUN pip3 install -U --no-cache-dir \
