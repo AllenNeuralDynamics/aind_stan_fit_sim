@@ -11,9 +11,7 @@ from os import path
 
 # --- external utils bootstrap ---
 _utils_candidates = [
-    os.environ.get('AIND_BEH_EPHYS_UTILS'),
-    '/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
-    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
+    '/src/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
 ]
 _utils_path = next((p for p in _utils_candidates if p and os.path.isdir(p)), None)
 if _utils_path is None:
@@ -35,6 +33,8 @@ from RLmodels import getSessionFitParams
 import arviz as az
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 from beh_functions import session_dirs, makeSessionDF
+from capsule_migration import capsule_directories
+capsule_dirs = capsule_directories()
 
 nest_asyncio.apply()
 
@@ -43,7 +43,7 @@ def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
     print(f'\n=== Processing animal {animalID} ===')
 
     # load curated session data
-    animal_dir = f'/root/capsule/results/{animalID}'
+    animal_dir = f'{capsule_dirs["output_dir"]}/{animalID}'
     ani_session_file = f'{animal_dir}/{animalID}_session_data.csv'
 
     if not os.path.exists(ani_session_file):
@@ -141,7 +141,7 @@ def main():
     if len(sys.argv) > 1:
         animalIDs = sys.argv[1:]
     else:
-        animalIDs = ['669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
+        animalIDs = ['754897']
 
     for animalID in animalIDs:
         try:

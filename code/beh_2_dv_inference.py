@@ -7,9 +7,7 @@ import os
 
 # --- external utils bootstrap ---
 _utils_candidates = [
-    os.environ.get('AIND_BEH_EPHYS_UTILS'),
-    '/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
-    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
+    '/src/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
 ]
 _utils_path = next((p for p in _utils_candidates if p and os.path.isdir(p)), None)
 if _utils_path is None:
@@ -32,6 +30,8 @@ from RLmodels import QLearningModel
 import matplotlib.pyplot as plt
 import pickle
 import ast
+from capsule_migration import capsule_directories
+capsule_dirs = capsule_directories()
 
 # %%
 
@@ -105,8 +105,7 @@ class meanDVinfer:
 def run_animal(animalID, model_name='stan_qLearning_5params'):
     # load fitted samples
     name = animalID + '/' + model_name
-    saveDir = path.expanduser('~/capsule/results/'+name)
-    dataDir = path.expanduser('~/capsule/data/foraging_nwb_bonsai/')
+    saveDir = os.path.join(capsule_dirs['output_dir'], animalID, model_name)
     if not os.path.exists(saveDir):
         print(f'Model {name} not found.')
         return
@@ -156,14 +155,11 @@ def run_animal(animalID, model_name='stan_qLearning_5params'):
         nwb_file = os.path.join(session_dir['beh_fig_dir'], session + '.nwb')
         nwb = load_nwb_from_filename(nwb_file)
         trial_count = len(nwb.trials.to_dataframe())
-        curr_cut = ast.literal_eval(ani_session_data['session_cut'][sessionInd])
 
-        # convert curr_cut to start and end removal
-        curr_cut[1] = trial_count - curr_cut[1]
-        choice_tbl = makeSessionDF(nwb, curr_cut)
-
-        choices = choice_tbl['choices'].values
-        outcomes = choice_tbl['outcomes'].values
+        curr_cut = ast.literal_eval(ani_session_data.loc[sessionInd, 'session_cut'])
+        choice_tbl = makeSessionDF(session, curr_cut)
+        choices = choice_tbl['choice'].values
+        outcomes = choice_tbl['outcome'].values
 
         # fitted
         sessionParams = sampleParams(fit, sessionInd, sampNum, param_names, randomSeed=sessionInd, aniLevel=False)
@@ -202,7 +198,7 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         animalIDs = sys.argv[1:]
     else:
-        animalIDs = ['672850', '669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
+        animalIDs = ['754897']
 
     for animalID in animalIDs:
         print(f'Processing {animalID}')

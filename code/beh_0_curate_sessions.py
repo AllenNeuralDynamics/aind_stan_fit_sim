@@ -4,9 +4,7 @@ import os
 
 # --- external utils bootstrap ---
 _utils_candidates = [
-    os.environ.get('AIND_BEH_EPHYS_UTILS'),
-    '/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
-    '/root/capsule/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
+    '/src/external/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils',
 ]
 _utils_path = next((p for p in _utils_candidates if p and os.path.isdir(p)), None)
 if _utils_path is None:
@@ -26,9 +24,12 @@ except ImportError as e:
 import nest_asyncio
 import pandas as pd
 import matplotlib.pyplot as plt
+from natsort import natsorted
 nest_asyncio.apply()
 from beh_functions import parseSessionID, session_dirs, plot_session_glm, plot_session_in_time_all, bonsai_to_nwb, transfer_nwb
+from capsule_migration import capsule_directories
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
+capsule_dirs = capsule_directories()
 
 # %%
 # pip install PyPDF2
@@ -61,20 +62,26 @@ from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 # %%
 def process_animal_sessions(ani_id):
     save_csv = True
-    session_list = [data_asset[:-9] for data_asset in os.listdir('/root/capsule/data') if data_asset.endswith('_raw_data') and ani_id in data_asset]
+    animal_dir = f'/{capsule_dirs["derived_dir"]}/{ani_id}'
+    session_list = [file_name for file_name in os.listdir(animal_dir) if file_name.startswith(f'behavior_{ani_id}')]
+    # sort by nartsort
+    session_list = natsorted(session_list)
     # session_df = pd.read_csv('/root/capsule/aind-beh-ephys-analysis/code/data_management/hopkins_session_assets.csv')
     # session_list = [session_id for session_id in session_df['session_id'] if ani_id in session_id]
 
     # %%
     plt.close('all')
-    animal_dir = f'/root/capsule/results/{ani_id}'
+    animal_dir = f'{capsule_dirs["output_dir"]}/{ani_id}'
     os.makedirs(animal_dir, exist_ok=True)
     ani_session_data = {'session_id': [], 'session_cut': [], 'box': []}
-    ani_session_file = f'/root/capsule/results/{ani_id}/{ani_id}_session_data.csv'
+    ani_session_file = f'{animal_dir}/{ani_id}_session_data.csv'
     for session in session_list:
         print(session)
         session_dir = session_dirs(session)
         aniID, datetime, string = parseSessionID(session)
+        session_output_dir = os.path.join(animal_dir, session, 'behavior')
+        # make dir
+        os.makedirs(session_output_dir, exist_ok=True)
         nwb_file = os.path.join(session_dir['beh_fig_dir'], session + '.nwb')
         if not os.path.exists(nwb_file):
             if aniID.startswith('ZS'):
@@ -104,11 +111,11 @@ def process_animal_sessions(ani_id):
         ani_session_data['box'].append(nwb.scratch['metadata'][0].box.values[0])
         ani_session_data['session_cut'].append([0, len(trial_df)])
         fig = plot_session_in_time_all(nwb, in_time=False)
-        display(fig)
-        fig.savefig(os.path.join(session_dir['beh_fig_dir'], session + '_session.png'))
+        # display(fig)
+        fig.savefig(os.path.join(session_output_dir, session + '_session.png'))
         fig, session_id, _ = plot_session_glm(session, tMax=5)
-        fig.savefig(os.path.join(session_dir['beh_fig_dir'], session + '_glm.png'))
-        display(fig)
+        fig.savefig(os.path.join(session_output_dir, session + '_glm.png'))
+        # display(fig)
     ani_session_dataframe = pd.DataFrame(ani_session_data)
     if save_csv:
         ani_session_dataframe.to_csv(ani_session_file, index=False)
@@ -116,7 +123,7 @@ def process_animal_sessions(ani_id):
         print(f"Dictionary has been saved to {ani_session_file}")   
 
 if __name__ == '__main__':
-    ani_id = sys.argv[1] if len(sys.argv) > 1 else 'ZS061'
+    ani_id = sys.argv[1] if len(sys.argv) > 1 else '754897'
     process_animal_sessions(ani_id)
 
 
