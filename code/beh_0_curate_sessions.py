@@ -2,35 +2,13 @@
 import sys
 sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
 import nest_asyncio
-import stan
-import numpy as np
 import pandas as pd
 import os
-from os import path
-import glob
-from RLmodels import QLearningModel
 # from RLmodels import qLearningModel_5params_simNoPlot
-from RLmodels import RestlessBanditDecoupled
-from RLmodels import QLearningModelSim, myPairPlot, getSessionFitParams
 import matplotlib.pyplot as plt
-import seaborn as sns
-import arviz as az
-from scipy.stats import spearmanr
-from scipy.stats import pearsonr
-import re
-from scipy.stats import norm
-from scipy.stats import halfcauchy
-from scipy.stats import cauchy
-from sklearn.linear_model import LinearRegression
-import pickle
-import json
 nest_asyncio.apply()
-from aind_dynamic_foraging_basic_analysis.licks.lick_analysis import plot_lick_analysis, load_data, load_nwb, cal_metrics, plot_met
 from beh_functions import parseSessionID, session_dirs, plot_session_glm, plot_session_in_time_all, bonsai_to_nwb, transfer_nwb
-from aind_dynamic_foraging_basic_analysis import plot_foraging_session
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
-import statsmodels.api as sm
-import json
 
 # %%
 # pip install PyPDF2
@@ -118,7 +96,7 @@ def process_animal_sessions(ani_id):
         print(f"Dictionary has been saved to {ani_session_file}")   
 
 if __name__ == '__main__':
-    ani_id = 'ZS061'
+    ani_id = sys.argv[1] if len(sys.argv) > 1 else 'ZS061'
     process_animal_sessions(ani_id)
 
 

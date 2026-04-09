@@ -7,27 +7,15 @@ import os
 import sys
 import ast
 import pickle
-import json
 from os import path
 
 sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
 
-from RLmodels import QLearningModel
-from RLmodels import RestlessBanditDecoupled
-from RLmodels import QLearningModelSim, myPairPlot, getSessionFitParams
+from RLmodels import getSessionFitParams
 
-import matplotlib.pyplot as plt
-import seaborn as sns
 import arviz as az
-from scipy.stats import spearmanr, pearsonr, norm, halfcauchy, cauchy
-from sklearn.linear_model import LinearRegression
-from aind_dynamic_foraging_basic_analysis.licks.lick_analysis import (
-    plot_lick_analysis, load_data, cal_metrics, plot_met
-)
-from aind_dynamic_foraging_basic_analysis import plot_foraging_session
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
-from beh_functions import parseSessionID, session_dirs, makeSessionDF
-import statsmodels.api as sm
+from beh_functions import session_dirs, makeSessionDF
 
 nest_asyncio.apply()
 
@@ -131,11 +119,10 @@ def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
 
 
 def main():
-    # if len(sys.argv) < 2:
-    #     print('Usage: python script.py <animalID1> [animalID2] [animalID3] ...')
-    #     sys.exit(1)
-
-    animalIDs = ['669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
+    if len(sys.argv) > 1:
+        animalIDs = sys.argv[1:]
+    else:
+        animalIDs = ['669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
 
     for animalID in animalIDs:
         try:

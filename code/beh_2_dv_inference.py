@@ -1,37 +1,16 @@
 # %%
-import nest_asyncio
-import stan
 import numpy as np
 import pandas as pd
 from os import path
 import sys
 sys.path.append('/root/capsule/aind-beh-ephys-analysis/code/beh_ephys_analysis/utils')
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
-from beh_functions import parseSessionID, session_dirs, makeSessionDF
+from beh_functions import session_dirs, makeSessionDF
 from RLmodels import QLearningModel
 # from RLmodels import qLearningModel_5params_simNoPlot
-from RLmodels import RestlessBanditDecoupled
-from RLmodels import QLearningModelSim, myPairPlot, getSessionFitParams
 import matplotlib.pyplot as plt
-import seaborn as sns
-import arviz as az
-from scipy.stats import spearmanr
-from scipy.stats import pearsonr
-import re
-from scipy.stats import norm
-from scipy.stats import halfcauchy
-from scipy.stats import cauchy
-from sklearn.linear_model import LinearRegression
 import pickle
-import json
-import matplotlib.gridspec as gridspec
-import matplotlib.colors as mcolors
-import statsmodels.api as sm
 import os
-from aind_dynamic_foraging_basic_analysis import plot_foraging_session
-from beh_utils import*
-import statsmodels.api as sm
-import json
 import ast
 
 # %%
@@ -200,11 +179,10 @@ def run_animal(animalID, model_name='stan_qLearning_5params'):
 
 # %%
 if __name__ == '__main__':
-    animalIDs = ani_names = ['672850', '669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
-
-    # if len(animalIDs) == 0:
-    #     print('Usage: python script.py <animalID1> [animalID2] ...')
-    #     sys.exit(1)
+    if len(sys.argv) > 1:
+        animalIDs = sys.argv[1:]
+    else:
+        animalIDs = ['672850', '669492', '669489', '754898', '754896', '754895', '749624', '749472', '701707', '699472', '699461', '699462']
 
     for animalID in animalIDs:
         print(f'Processing {animalID}')
