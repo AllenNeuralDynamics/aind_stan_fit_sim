@@ -19,23 +19,22 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN pip install -U --no-cache-dir \
-    arviz \
-    matplotlib \
-    scipy \
-    seaborn \
-    scikit-learn \
-    codeocean \
-    PyPDF2 \
+    arviz==0.21.0 \
+    matplotlib==3.9.1 \
+    scipy==1.14.1 \
+    seaborn==0.13.2 \
+    scikit-learn==1.5.2 \
+    codeocean==0.14.0 \
+    PyPDF2==3.0.1 \
     aind-dynamic-foraging-data-utils==0.1.4 \
-    open-ephys-python-tools \
-    spikeinterface
-    
+
 
 RUN pip3 install -U --no-cache-dir \
     numpy==1.26.4 \
     pandas==2.2.1 \
     pystan==3.9.0 \
-    statsmodels
+    statsmodels==0.14.5 \
+    natsort==8.4.0
 
 COPY postInstall /
 RUN /postInstall
