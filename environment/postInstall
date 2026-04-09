@@ -6,7 +6,7 @@ pip install --no-cache-dir git+https://github.com/AllenNeuralDynamics/aind-dynam
 
 
 # clone external analysis repo used via source-path imports
-EXTERNAL_ROOT="/external"
+EXTERNAL_ROOT=""
 BEH_EPHYS_REPO_DIR="$EXTERNAL_ROOT/aind-beh-ephys-analysis"
 BEH_EPHYS_REPO_URL="https://github.com/AllenNeuralDynamics/aind-beh-ephys-analysis.git"
 
