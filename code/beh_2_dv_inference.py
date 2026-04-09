@@ -85,7 +85,7 @@ class meanDVinfer:
 def run_animal(animalID, model_name='stan_qLearning_5params'):
     # load fitted samples
     name = animalID + '/' + model_name
-    saveDir = path.expanduser('~/capsule/scratch/'+name)
+    saveDir = path.expanduser('~/capsule/results/'+name)
     dataDir = path.expanduser('~/capsule/data/foraging_nwb_bonsai/')
     if not os.path.exists(saveDir):
         print(f'Model {name} not found.')

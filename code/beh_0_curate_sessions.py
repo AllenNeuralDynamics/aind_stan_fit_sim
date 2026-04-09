@@ -47,10 +47,10 @@ def process_animal_sessions(ani_id):
 
     # %%
     plt.close('all')
-    animal_dir = f'/root/capsule/scratch/{ani_id}'
+    animal_dir = f'/root/capsule/results/{ani_id}'
     os.makedirs(animal_dir, exist_ok=True)
     ani_session_data = {'session_id': [], 'session_cut': [], 'box': []}
-    ani_session_file = f'/root/capsule/scratch/{ani_id}/{ani_id}_session_data.csv'
+    ani_session_file = f'/root/capsule/results/{ani_id}/{ani_id}_session_data.csv'
     for session in session_list:
         print(session)
         session_dir = session_dirs(session)

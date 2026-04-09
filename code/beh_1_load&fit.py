@@ -24,7 +24,7 @@ def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
     print(f'\n=== Processing animal {animalID} ===')
 
     # load curated session data
-    animal_dir = f'/root/capsule/scratch/{animalID}'
+    animal_dir = f'/root/capsule/results/{animalID}'
     ani_session_file = f'{animal_dir}/{animalID}_session_data.csv'
 
     if not os.path.exists(ani_session_file):
@@ -102,7 +102,7 @@ def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
 
     # save
     paramNames = ['aN', 'aP', 'aF', 'beta', 'bias']
-    saveDir = path.expanduser(f'~/capsule/scratch/{animalID}/stan_qLearning_5params')
+    saveDir = path.expanduser(f'~/capsule/results/{animalID}/stan_qLearning_5params')
     os.makedirs(saveDir, exist_ok=True)
 
     paramsFit = getSessionFitParams(summary, paramNames, focus='mean')
