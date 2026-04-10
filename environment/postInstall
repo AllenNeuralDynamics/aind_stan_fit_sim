@@ -4,20 +4,24 @@ set -e
 
 pip install --no-cache-dir git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis@plot_session_in_time_sue
 
-
 # clone external analysis repo used via source-path imports
 EXTERNAL_ROOT="src/external"
 BEH_EPHYS_REPO_DIR="$EXTERNAL_ROOT/aind-beh-ephys-analysis"
 BEH_EPHYS_REPO_URL="https://github.com/AllenNeuralDynamics/aind-beh-ephys-analysis.git"
+BEH_EPHYS_COMMIT="f5d0043ece42078f3185d21ee3478df1e75f42f6"
 
 mkdir -p "$EXTERNAL_ROOT"
+
 if [ ! -d "$BEH_EPHYS_REPO_DIR/.git" ]; then
-  git clone --branch main --single-branch "$BEH_EPHYS_REPO_URL" "$BEH_EPHYS_REPO_DIR"
+  # shallow clone for speed
+  git clone --depth 1 "$BEH_EPHYS_REPO_URL" "$BEH_EPHYS_REPO_DIR"
+  git -C "$BEH_EPHYS_REPO_DIR" fetch --depth 1 origin "$BEH_EPHYS_COMMIT"
 else
-  git -C "$BEH_EPHYS_REPO_DIR" fetch origin
-  git -C "$BEH_EPHYS_REPO_DIR" checkout main || git -C "$BEH_EPHYS_REPO_DIR" checkout -b main origin/main
-  git -C "$BEH_EPHYS_REPO_DIR" pull --ff-only origin main
+  git -C "$BEH_EPHYS_REPO_DIR" fetch origin "$BEH_EPHYS_COMMIT"
 fi
+
+# checkout the exact commit (detached HEAD)
+git -C "$BEH_EPHYS_REPO_DIR" checkout "$BEH_EPHYS_COMMIT"
 
 
 # move VS code data directory into capsule, so it persists

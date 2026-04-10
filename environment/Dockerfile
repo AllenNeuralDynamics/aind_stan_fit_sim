@@ -17,7 +17,7 @@ RUN apt-get update \
         git \
         curl \
     && rm -rf /var/lib/apt/lists/*
-
+  
 RUN pip install -U --no-cache-dir \
     arviz==0.21.0 \
     matplotlib==3.9.1 \
