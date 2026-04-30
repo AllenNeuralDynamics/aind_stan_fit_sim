@@ -1,0 +1,9 @@
+{
+	"version": 1,
+	"attached_datasets": [
+		{
+			"id": "42507b86-4484-4505-87cd-ce70fb031da5",
+			"mount": "scratch_data"
+		}
+	]
+}

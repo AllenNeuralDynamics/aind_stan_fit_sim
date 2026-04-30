@@ -1,0 +1,87 @@
+{
+	"version": 1,
+	"base_image": "codeocean/mambaforge3:23.1.0-4-python3.10.12-ubuntu22.04",
+	"post_install": true,
+	"options": {
+		"registry_host_arg": true,
+		"git_ask_pass": true,
+		"mount_secrets": true
+	},
+	"installers": {
+		"apt": {
+			"packages": [
+				{
+					"name": "build-essential",
+					"version": "12.9ubuntu3"
+				}
+			],
+			"install_software_properties_common": true
+		},
+		"pip3": {
+			"packages": [
+				{
+					"name": "aind-dynamic-foraging-data-utils",
+					"version": "0.1.4"
+				},
+				{
+					"name": "arviz",
+					"version": "0.21.0"
+				},
+				{
+					"name": "git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis#egg=aind-dynamic-foraging-basic-analysis",
+					"version": "b3e2e4f29f062764f9a40bfdc630dd0b6f039989"
+				},
+				{
+					"name": "matplotlib",
+					"version": "3.9.1"
+				},
+				{
+					"name": "natsort",
+					"version": "8.4.0"
+				},
+				{
+					"name": "numpy",
+					"version": "1.26.4"
+				},
+				{
+					"name": "open-ephys-python-tools",
+					"version": "0.1.10"
+				},
+				{
+					"name": "pandas",
+					"version": "2.2.1"
+				},
+				{
+					"name": "pypdf2",
+					"version": "3.0.1"
+				},
+				{
+					"name": "pystan",
+					"version": "3.9.0"
+				},
+				{
+					"name": "scikit-learn",
+					"version": "1.5.2"
+				},
+				{
+					"name": "scipy",
+					"version": "1.14.1"
+				},
+				{
+					"name": "seaborn",
+					"version": "0.13.2"
+				},
+				{
+					"name": "spikeinterface[full]",
+					"version": "0.103.0"
+				},
+				{
+					"name": "statsmodels",
+					"version": "0.14.5"
+				}
+			],
+			"options": {},
+			"pre_install_options": {}
+		}
+	}
+}
