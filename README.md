@@ -126,7 +126,7 @@ Let $\delta_{n,t} = r_{n,t} - Q^{\text{chosen}}_{n,t}$ be the prediction error (
 
 $$Q^{\text{chosen}}_{n,t+1} = Q^{\text{chosen}}_{n,t} + \begin{cases} \alpha_P \, \delta_{n,t} & \text{if } \delta_{n,t} \geq 0 \\ \alpha_N \, \delta_{n,t} & \text{if } \delta_{n,t} < 0 \end{cases}$$
 
-$$Q^{\text{unchosen}}_{n,t+1} = (1 - \alpha_F) \, Q^{\text{unchosen}}_{n,t}$$
+$$Q^{\text{unchosen}}_{n,t+1} = \alpha_F \, Q^{\text{unchosen}}_{n,t}$$
 
 where $r_{n,t} \in \{0, 1\}$ is the trial outcome.
 
@@ -169,4 +169,3 @@ What it does:
 
 - **Run in sequence only:** Step 2 depends on Step 1 outputs, and Step 3 depends on Step 2 outputs.
 - If curation filters or session cuts change, re-run all downstream steps.
-- The ampersand in `beh_1_load&fit.py` usually requires quotes in shell commands.
