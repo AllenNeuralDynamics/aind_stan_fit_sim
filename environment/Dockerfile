@@ -28,7 +28,8 @@ RUN pip install -U --no-cache-dir \
     PyPDF2==3.0.1 \
     aind-dynamic-foraging-data-utils==0.1.4 \
     open-ephys-python-tools==0.1.10 \
-    spikeinterface[full]==0.103.0
+    spikeinterface[full]==0.103.0 \
+    aind-ephys-utils==0.0.15
     
 
 RUN pip3 install -U --no-cache-dir \

@@ -8,7 +8,7 @@ pip install --no-deps --no-cache-dir git+https://github.com/AllenNeuralDynamics/
 EXTERNAL_ROOT="src/external"
 BEH_EPHYS_REPO_DIR="$EXTERNAL_ROOT/aind-beh-ephys-analysis"
 BEH_EPHYS_REPO_URL="https://github.com/AllenNeuralDynamics/aind-beh-ephys-analysis.git"
-BEH_EPHYS_COMMIT="4eaa59076b21e38d8101bdba375224de82819693"
+BEH_EPHYS_COMMIT="c1af968002a4e7d85a35fdc455ab849617f57874"
 
 mkdir -p "$EXTERNAL_ROOT"
 
