@@ -2,13 +2,13 @@
 set -e
 
 
-pip install --no-cache-dir git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis@plot_session_in_time_sue
+pip install --no-deps --no-cache-dir git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis@b3e2e4f29f062764f9a40bfdc630dd0b6f039989
 
 # clone external analysis repo used via source-path imports
 EXTERNAL_ROOT="src/external"
 BEH_EPHYS_REPO_DIR="$EXTERNAL_ROOT/aind-beh-ephys-analysis"
 BEH_EPHYS_REPO_URL="https://github.com/AllenNeuralDynamics/aind-beh-ephys-analysis.git"
-BEH_EPHYS_COMMIT="f5d0043ece42078f3185d21ee3478df1e75f42f6"
+BEH_EPHYS_COMMIT="4eaa59076b21e38d8101bdba375224de82819693"
 
 mkdir -p "$EXTERNAL_ROOT"
 
