@@ -26,7 +26,7 @@ except ImportError as e:
 
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 from beh_functions import session_dirs, makeSessionDF
-from RLmodels import QLearningModel
+from utils.RLmodels import QLearningModel
 import matplotlib.pyplot as plt
 import pickle
 import ast

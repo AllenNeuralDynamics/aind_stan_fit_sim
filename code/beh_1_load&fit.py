@@ -28,7 +28,7 @@ except ImportError as e:
     raise ImportError(f'beh_functions not importable from {_utils_path}: {e}')
 # --- end bootstrap ---
 
-from RLmodels import getSessionFitParams
+from utils.RLmodels import getSessionFitParams
 
 import arviz as az
 from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
