@@ -32,42 +32,12 @@ from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 capsule_dirs = capsule_directories()
 
 # %%
-# pip install PyPDF2
-# pip install git+https://github.com/AllenNeuralDynamics/aind-dynamic-foraging-basic-analysis@plot_session_in_time_sue 
-
-# %%
-# pip install aind_dynamic_foraging_data_utils
-
-# %%
-# # load sessions
-# # get list of available sessions
-# file_pattern = "*.nwb"
-# nwb_folder = "/root/capsule/data/foraging_nwb_bonsai"
-# file_list = glob.glob(os.path.join(nwb_folder + "/" + file_pattern))
-# file_names = [os.path.basename(file) for file in file_list]
-# # file_name = file_names[20]
-    
-# results = [parseSessionID(file_name) for file_name in file_names]
-# aniIDs, dates = zip(*results)
-
-# sessionInfo = pd.DataFrame({'sessionID': file_names,
-#                             'aniID': aniIDs,
-#                             'date': dates})
-
-# %%
-# reference_date = datetime(2024, 5, 15)
-# animalID = '717121'
-# targetInds = np.where((sessionInfo['date'] >= reference_date) & (sessionInfo['aniID'] == animalID))[0]
-
-# %%
 def process_animal_sessions(ani_id):
     save_csv = True
     animal_dir = f'/{capsule_dirs["derived_dir"]}/{ani_id}'
     session_list = [file_name for file_name in os.listdir(animal_dir) if file_name.startswith(f'behavior_{ani_id}')]
     # sort by nartsort
     session_list = natsorted(session_list)
-    # session_df = pd.read_csv('/root/capsule/aind-beh-ephys-analysis/code/data_management/hopkins_session_assets.csv')
-    # session_list = [session_id for session_id in session_df['session_id'] if ani_id in session_id]
 
     # %%
     plt.close('all')
