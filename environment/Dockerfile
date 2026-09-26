@@ -29,7 +29,8 @@ RUN pip install -U --no-cache-dir \
     aind-dynamic-foraging-data-utils==0.1.4 \
     open-ephys-python-tools==0.1.10 \
     spikeinterface[full]==0.103.0 \
-    aind-ephys-utils==0.0.15
+    aind-ephys-utils==0.0.15 \
+    wavpack-numcodecs==0.2.3
     
 
 RUN pip3 install -U --no-cache-dir \
