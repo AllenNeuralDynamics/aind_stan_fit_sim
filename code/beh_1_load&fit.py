@@ -35,6 +35,7 @@ from aind_dynamic_foraging_data_utils.nwb_utils import load_nwb_from_filename
 from beh_functions import session_dirs, makeSessionDF
 from capsule_migration import capsule_directories
 capsule_dirs = capsule_directories()
+SCRATCH_DIR = '/root/capsule/scratch'
 
 nest_asyncio.apply()
 
@@ -43,7 +44,7 @@ def fit_animal(animalID, model_path='/code/stan_qLearning_5params.stan'):
     print(f'\n=== Processing animal {animalID} ===')
 
     # load curated session data
-    animal_dir = f'{capsule_dirs["output_dir"]}/{animalID}'
+    animal_dir = f'{SCRATCH_DIR}/{animalID}'
     ani_session_file = f'{animal_dir}/{animalID}_session_data.csv'
 
     if not os.path.exists(ani_session_file):
@@ -141,7 +142,11 @@ def main():
     if len(sys.argv) > 1:
         animalIDs = sys.argv[1:]
     else:
-        animalIDs = ['754897']
+        animalIDs = sorted(
+            a for a in os.listdir(SCRATCH_DIR)
+            if os.path.exists(f'{SCRATCH_DIR}/{a}/{a}_session_data.csv')
+        )
+    print(f'Fitting {len(animalIDs)} animals: {animalIDs}')
 
     for animalID in animalIDs:
         try:

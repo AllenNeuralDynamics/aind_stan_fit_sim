@@ -32,6 +32,12 @@ for curr_col in col_to_attach:
     all_mounts.extend(curr_mount)
 #%%
 
+#%%
+all_ids = all_ids
+# all_mounts = all_mounts + ['all_behavior']
+#all_ids = all_ids + ['c1a35fd0-c3aa-47a8-ba40-288b1e39a86a', 'ac7c7961-9178-4bf9-9d66-0a426cf3cc24', '1a8bede7-bdc1-4b41-8290-bc0bdafdf019', 'c712751d-f744-4fe8-9657-93a7084eab22', 'adf4f98c-5015-4d23-81e3-359a9a5b6ec1', 'c712751d-f744-4fe8-9657-93a7084eab22']
+all_mounts = all_mounts
+
 # Generate the list of DataAssetAttachParams objects
 all_mounts_new = []
 for id, mount in zip(all_ids, all_mounts):

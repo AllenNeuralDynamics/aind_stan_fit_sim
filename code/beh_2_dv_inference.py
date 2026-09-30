@@ -198,7 +198,12 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         animalIDs = sys.argv[1:]
     else:
-        animalIDs = ['754897']
+        out_dir = capsule_dirs['output_dir']
+        animalIDs = sorted(
+            a for a in os.listdir(out_dir)
+            if os.path.exists(os.path.join(out_dir, a, 'stan_qLearning_5params', 'samples'))
+        )
+    print(f'Running DV inference for {len(animalIDs)} animals: {animalIDs}')
 
     for animalID in animalIDs:
         print(f'Processing {animalID}')
